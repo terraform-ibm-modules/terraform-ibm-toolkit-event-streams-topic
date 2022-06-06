@@ -2,7 +2,9 @@ id: github.com/cloud-native-toolkit/terraform-ibm-event-streams-topic
 name: ibm-event-streams-topic
 alias: topic
 type: terraform
-description: Module to provision a topic in an existing managed IBM Cloud Event Streams instance
+description: >-
+  Module to provision a topic in an existing managed IBM Cloud Event Streams
+  instance
 tags:
   - tools
   - kafka
@@ -14,7 +16,67 @@ versions:
       - id: event_streams
         refs:
           - source: github.com/cloud-native-toolkit/terraform-ibm-event-streams
-            version: ">= 1.0.0"
+            version: '>= 1.0.0'
+    variables:
+      - name: ibmcloud_api_key
+        type: string
+        description: The api key for IBM Cloud access
+        scope: global
+      - name: region
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+        moduleRef:
+          id: event_streams
+          output: location
+      - name: event_streams_id
+        type: string
+        description: The id of the event streams instance where the topic will be created
+        moduleRef:
+          id: event_streams
+          output: id
+      - name: name
+        type: string
+        description: The name of the topic
+      - name: partitions
+        type: number
+        description: The number of partitions of the topic. Default value is 1.
+        default: '1'
+      - name: cleanup_policy
+        type: string
+        description: The cleanup policy for the topic
+        default: 'null'
+      - name: retention_ms
+        type: string
+        default: 'null'
+      - name: retention_bytes
+        type: string
+        default: 'null'
+      - name: segment_bytes
+        type: string
+        default: 'null'
+      - name: segment_ms
+        type: string
+        default: 'null'
+      - name: segment_index_bytes
+        type: string
+        default: 'null'
+      - name: provision
+        type: bool
+        description: >-
+          Flag indicating that the topic should be provisioned. If not then an
+          existing topic will be looked up
+        default: true
+    version: v1.0.1
+    outputs:
+      - name: id
+      - name: kafka_http_url
+      - name: kafka_brokers_sasl
+  - platforms: []
+    dependencies:
+      - id: event_streams
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-event-streams
+            version: '>= 1.0.0'
     variables:
       - name: event_streams_id
         moduleRef:
@@ -43,31 +105,33 @@ versions:
       - name: cleanup_policy
         type: string
         description: The cleanup policy for the topic
-        default: "null"
+        default: 'null'
         optional: true
       - name: retention_ms
         type: string
-        default: "null"
+        default: 'null'
         optional: true
       - name: retention_bytes
         type: string
-        default: "null"
+        default: 'null'
         optional: true
       - name: segment_bytes
         type: string
-        default: "null"
+        default: 'null'
         optional: true
       - name: segment_ms
         type: string
-        default: "null"
+        default: 'null'
         optional: true
       - name: segment_index_bytes
         type: string
-        default: "null"
+        default: 'null'
         optional: true
       - name: provision
         type: bool
-        description: Flag indicating that the topic should be provisioned. If not then an existing topic will be looked up
+        description: >-
+          Flag indicating that the topic should be provisioned. If not then an
+          existing topic will be looked up
         default: true
         optional: true
     version: v1.0.0
@@ -75,27 +139,17 @@ versions:
       - name: id
         description: output "id" {   value = data.ibm_event_streams_topic.topic.id }
       - name: kafka_http_url
-        description: output "kafka_http_url" {   value = data.ibm_event_streams_topic.topic.kafka_http_url }
+        description: >-
+          output "kafka_http_url" {   value =
+          data.ibm_event_streams_topic.topic.kafka_http_url }
       - name: kafka_brokers_sasl
-        description: output "kafka_brokers_sasl" {   value = data.ibm_event_streams_topic.topic.kafka_brokers_sasl }
+        description: >-
+          output "kafka_brokers_sasl" {   value =
+          data.ibm_event_streams_topic.topic.kafka_brokers_sasl }
   - platforms:
       - kubernetes
       - ocp3
       - ocp4
     dependencies: []
-    #    - id: cluster
-    #      refs:
-    #        - source: github.com/ibm-garage-cloud/terraform-ibm-container-platform
-    #          version: ">= 1.7.0"
-    #        - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
-    #          version: ">= 2.0.0"
-    #    - id: namespace
-    #      refs:
-    #        - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
-    #          version: ">= 2.1.0"
-    #    - id: dashboard
-    #      refs:
-    #        - source: github.com/ibm-garage-cloud/terraform-k8s-dashboard
-    #          version: ">= 1.6.0"
     variables: []
     version: v0.0.0
