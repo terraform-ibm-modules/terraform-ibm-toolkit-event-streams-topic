@@ -1,4 +1,4 @@
-id: github.com/cloud-native-toolkit/terraform-ibm-event-streams-topic
+id: github.com/terraform-ibm-modules/terraform-ibm-toolkit-event-streams-topic
 name: ibm-event-streams-topic
 alias: topic
 type: terraform
@@ -11,6 +11,66 @@ tags:
   - event streams
   - topic
 versions:
+  - platforms: []
+    dependencies:
+      - id: event_streams
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-event-streams
+            version: '>= 1.0.0'
+    variables:
+      - name: ibmcloud_api_key
+        type: string
+        description: The api key for IBM Cloud access
+        scope: global
+      - name: region
+        type: string
+        description: Geographic location of the resource (e.g. us-south, us-east)
+        moduleRef:
+          id: event_streams
+          output: location
+      - name: event_streams_id
+        type: string
+        description: The id of the event streams instance where the topic will be created
+        moduleRef:
+          id: event_streams
+          output: id
+      - name: name
+        type: string
+        description: The name of the topic
+      - name: partitions
+        type: number
+        description: The number of partitions of the topic. Default value is 1.
+        default: '1'
+      - name: cleanup_policy
+        type: string
+        description: The cleanup policy for the topic
+        default: 'null'
+      - name: retention_ms
+        type: string
+        default: 'null'
+      - name: retention_bytes
+        type: string
+        default: 'null'
+      - name: segment_bytes
+        type: string
+        default: 'null'
+      - name: segment_ms
+        type: string
+        default: 'null'
+      - name: segment_index_bytes
+        type: string
+        default: 'null'
+      - name: provision
+        type: bool
+        description: >-
+          Flag indicating that the topic should be provisioned. If not then an
+          existing topic will be looked up
+        default: true
+    version: v1.0.2
+    outputs:
+      - name: id
+      - name: kafka_http_url
+      - name: kafka_brokers_sasl
   - platforms: []
     dependencies:
       - id: event_streams
